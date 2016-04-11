@@ -1,0 +1,40 @@
+body {
+    background-color: silver;
+}
+
+h1 {
+    color: navy;
+    margin-left: 20px;
+}
+
+p {
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px
+}
+
+p.direita {
+  text-align: right;
+}
+
+p.esqueda {
+  text-align: left;;
+}
+
+.larguraLabel {
+  text-align: right;
+}
+
+.corBranca {
+  color: white;
+  text-align: left;
+}
+
+.estiloBorda {
+  height: 25px;
+}
+
+.selecionado {
+  font-weight: bold;
+  font-color: blue;
+}

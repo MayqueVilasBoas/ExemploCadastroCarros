@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html ng-app="teste">
+<head>
+    <meta charset="utf-8">
+
+    <title>Cadastro de Veículos</title>
+
+    <!-- DECLARAÇÃO jQuery 2.2.3 -->
+    <script src="https://code.jquery.com/jquery-2.2.3.min.js"   integrity="sha256-a23g1Nt4dtEYOj7bR+vTu7+T8VP13humZFBJNIYoEJo="   crossorigin="anonymous"></script>
+
+    <!--DECLARAÇÃO DO BOOTSTRAP-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <!--DECLARAÇÃO DO ANGULAR JS-->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js"></script>
+
+    <!-- DECLARAÇÃO DO PLUGIN DA DIRETIVA DE MASCARAR DATA MaskEdit -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.maskedinput/1.4.1/jquery.maskedinput.min.js"></script>
+
+    <!-- DECLARAÇÃO DO MEU TEMA -->
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+
+    <!-- DECLARAÇÃO DO CONTROLLER-->
+    <script src="js/controller/veiculosController.js"></script>
+
+    <!-- DECLARAÇÃO DA DIRETIVA DE MASCARAR DATA-->
+    <script src="js/directive/maskDataDirective.js"></script>
+</head>
+<body ng-controller="veiculosController">
+    <div class="col-md-10 col-md-offset-1">
+        <br>
+        <!------------------------------------------------------------------------->
+        <!--                       FORMULARIO DE CADASTRO                        -->
+        <!------------------------------------------------------------------------->
+        <div class="panel panel-primary" ng-show="mostrarCadastro">
+            <div class="panel-heading">Cadastro</div>
+            <div class="panel-body">
+                <div class="form-group">
+                    <label class="col-sm-2 larguraLabel">Carro</label>
+                    <input class="col-sm-9" type="text" placeholder="Carro" ng-model="veiculo.carro">
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="col-sm-2 larguraLabel">Data Compra</label>
+                    <input class="col-sm-3" type="date" placeholder="Data Compra" ng-model="veiculo.dataCompra">
+
+                    <label class="col-sm-3 larguraLabel">Cor</label>
+                    <select class="estiloBorda col-sm-3" ng-options="cor.nome as cor.nome for cor in cores" ng-model="veiculo.cor.nome">
+                        <option value="">Selecione uma cor</option>
+                    </select>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label class="col-sm-2 larguraLabel">Marca</label>
+                    <input class="col-sm-9" type="text" placeholder="Marca" ng-model="veiculo.marca">
+                </div>
+                <br>
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="col-md-6">
+                        <button class="btn btn-block btn-success" ng-click="salvarVeiculo(veiculo)"><span class="glyphicon glyphicon-ok corBranca"> Salvar</button>
+                    </div>
+                    <div class="col-xs-6">
+                        <button class="btn btn-block btn-danger" ng-click="cancelarVeiculo()"><span class="glyphicon glyphicon-remove corBranca"> Cancelar</button>
+                    </div>
+                </div>
+                <br>
+                <br>
+                <br>
+                <div class="alert alert-danger" role="alert" ng-show="erro">
+                    {{erro}}
+                </div>
+            </div>
+        </div><!--Cadastro-->
+
+        <!------------------------------------------------------------------------->
+        <!--                       FORMULARIO DE CONSULTA                        -->
+        <!------------------------------------------------------------------------->
+        <div class="panel panel-primary" ng-show="!mostrarCadastro">
+            <div class="panel-heading col-md-12">
+                <div class="col-md-6">Consulta</div>
+                <div class="col-md-3">
+                    <button class="btn btn-block btn-danger" ng-click="apagarVeiculosSelecionados(veiculos)" ng-show="!mostrarCadastro">
+                        <span class="glyphicon glyphicon-remove"> Excluir Selecionados
+                    </button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-block btn-default" ng-click="novoVeiculo()" ng-show="!mostrarCadastro">
+                        <span class="glyphicon glyphicon-plus"> Novo
+                    </button>
+                </div>
+            </div>
+
+            <div class="panel-body" style="display:block">
+                <div class="box-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <!--Titulo Tabela---------------------->
+                            <tr>
+                                <th style="width: 10px;"></th>
+                                <th style="width: 200px;">
+                                    <a href="" ng-click="ordenarConsulta('nome')">Carro   </a>
+                                    <span ng-show="campoOrdenacaoConsulta == 'nome' && direcaoOrdenacaoConsulta" class="fa fa-caret-down"></span>
+                                    <span ng-show="campoOrdenacaoConsulta == 'nome' && !direcaoOrdenacaoConsulta" class="fa fa-caret-up"></span>
+                                </th>
+                                <th style="width: 120px;">
+                                    <a href="" ng-click="ordenarConsulta('dataCompra')">Data Compra   </a>
+                                    <span ng-show="campoOrdenacaoConsulta == 'dataCompra' && direcaoOrdenacaoConsulta" class="fa fa-caret-down"></span>
+                                    <span ng-show="campoOrdenacaoConsulta == 'dataCompra' && !direcaoOrdenacaoConsulta" class="fa fa-caret-up"></span>
+                                </th>
+                                <th style="width: 100px;">
+                                    <a href="" ng-click="ordenarConsulta('cor.nome')">Cor   </a>
+                                    <span ng-show="campoOrdenacaoConsulta == 'cor.nome' && direcaoOrdenacaoConsulta" class="fa fa-caret-down"></span>
+                                    <span ng-show="campoOrdenacaoConsulta == 'cor.nome' && !direcaoOrdenacaoConsulta" class="fa fa-caret-up"></span>
+                                </th>
+                                <th style="width: 150px;">
+                                    <a href="" ng-click="ordenarConsulta('marca')">Marca   </a>
+                                    <span ng-show="campoOrdenacaoConsulta == 'marca' && direcaoOrdenacaoConsulta" class="fa fa-caret-down"></span>
+                                    <span ng-show="campoOrdenacaoConsulta == 'marca' && !direcaoOrdenacaoConsulta" class="fa fa-caret-up"></span>
+                                </th>
+                                <th style="width: 100px;"></th>
+                            </tr>
+                            <!--Filtro Tabela----------------------->
+                            <tr>
+                                <th></th>
+                                <th>
+                                    <input type="text" placeholder="Filtro" class="col-md-12" ng-model="carroFiltroConsulta">
+                                </th>
+                                <th>
+                                    <input id="editDataCompraFiltroConsulta" type="text" placeholder="Filtro" class="col-md-12" ng-model="dataCompraFiltroConsulta">
+                                </th>
+                                <th>
+                                    <input type="text" placeholder="Filtro" class="col-md-12" ng-model="corFiltroConsulta">
+                                </th>
+                                <th>
+                                    <input type="text" placeholder="Filtro" class="col-md-12" ng-model="marcaFiltroConsulta">
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        {{dataCompraFiltroConsulta}}
+                        <!--Tabela-------------------------------->
+                        <tbody>
+                            <tr ng-class="{selecionado: veiculoRow.selecionado}" ng-repeat="veiculoRow in veiculos |
+                                filter:{carro: carroFiltroConsulta} |
+                                filter:{dataCompra: dataCompraFiltroConsulta} |
+                                filter:{cor: {nome: corFiltroConsulta}} |
+                                filter:{marca: marcaFiltroConsulta} |
+                                orderBy:campoOrdenacaoConsulta:direcaoOrdenacaoConsulta">
+                                <td class="text-center">
+                                    <input type="checkbox" ng-model="veiculoRow.selecionado">
+                                </td>
+                                <td>{{veiculoRow.carro}}</td>
+                                <td>{{veiculoRow.dataCompra | date:"dd/MM/yyyy"}}</td>
+                                <td>{{veiculoRow.cor.nome}}</td>
+                                <td>{{veiculoRow.marca}}</td>
+                                <td class="actions">
+                                    <a class="col-md-6 btn btn-warning btn-xs" ng-click="editarVeiculo(veiculoRow)">Editar</a>
+                                    <a class="col-md-6 btn btn-danger  btn-xs"  ng-click="excluirVeiculo(veiculoRow)">Excluir</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <!--Paginacao-------------------------------->
+                    </table>
+                </div>
+            </div>
+        </div><!--Consulta-->
+    </div>
+</body>
+</html>
